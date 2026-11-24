@@ -18,7 +18,7 @@ blueprint:
       description: Wähle deinen Helfer „Datum und Uhrzeit“
       selector:
         entity:
-          - domain: input_datetime
+          domain: input_datetime
 
     boost_minutes:
       name: Boost-Dauer in Minuten
