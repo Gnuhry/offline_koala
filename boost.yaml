@@ -1,8 +1,8 @@
 blueprint:
   name: FRITZ! Heizung - einmaliger Boost
   description: >
-    Startet den Boost eines ausgewählten FRITZ!-Thermostats zu einem
-    gewählten Datum und einer Uhrzeit und beendet ihn nach der gewählten Dauer.
+    Startet den Boost eines ausgewählten FRITZ!-Thermostats zur Zeit eines
+    ausgewählten Datum-/Uhrzeit-Helfers und beendet ihn nach der gewählten Dauer.
   domain: automation
   input:
     thermostat:
@@ -13,17 +13,12 @@ blueprint:
           entity:
             - domain: climate
 
-    start_date:
-      name: Startdatum
-      description: An welchem Tag soll der Boost beginnen?
-      selector:
-        date:
-
-    start_time:
+    start_datetime:
       name: Startzeit
-      description: Wann soll der Boost beginnen?
+      description: Wähle deinen Helfer „Datum und Uhrzeit“
       selector:
-        time:
+        entity:
+          - domain: input_datetime
 
     boost_minutes:
       name: Boost-Dauer in Minuten
@@ -40,12 +35,12 @@ mode: single
 
 triggers:
   - trigger: time
-    at: !input start_time
+    at: !input start_datetime
 
 conditions:
   - condition: template
     value_template: >-
-      {{ now().date() == as_datetime(!input start_date).date() }}
+      {{ (states(!input start_datetime) | as_datetime).date() == now().date() }}
 
 actions:
   - action: climate.set_preset_mode
