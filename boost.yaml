@@ -13,11 +13,17 @@ blueprint:
           entity:
             - domain: climate
 
-    start_datetime:
-      name: Startdatum und Startzeit
+    start_date:
+      name: Startdatum
+      description: An welchem Tag soll der Boost beginnen?
+      selector:
+        date:
+
+    start_time:
+      name: Startzeit
       description: Wann soll der Boost beginnen?
       selector:
-        datetime:
+        time:
 
     boost_minutes:
       name: Boost-Dauer in Minuten
@@ -34,9 +40,12 @@ mode: single
 
 triggers:
   - trigger: time
-    at: !input start_datetime
+    at: !input start_time
 
-conditions: []
+conditions:
+  - condition: template
+    value_template: >-
+      {{ now().date() == as_datetime(!input start_date).date() }}
 
 actions:
   - action: climate.set_preset_mode
